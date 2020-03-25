@@ -25,7 +25,8 @@ namespace Api
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:3000")
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
                 });
             });
             services.AddControllers();

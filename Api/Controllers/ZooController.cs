@@ -10,7 +10,7 @@ namespace Api.Controllers
 {
     [Route("zoo")]
     [ApiController]
-    public class FileController : ControllerBase
+    public class ZooController : ControllerBase
     {
         private readonly ZooRepository _repo = new ZooRepository();
 
@@ -44,6 +44,7 @@ namespace Api.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 return new BadRequestResult();
             }
         }
@@ -89,9 +90,8 @@ namespace Api.Controllers
         }
 
         [HttpGet("Read")]
-        public string Read()
+        public string Read(string path= @"C:\Users\Resource\Downloads\Animal.txt")
         {
-            string path = @"C:\Users\Resource\Downloads\Animal.txt";
             return _repo.readFile(path);
         }
     }
