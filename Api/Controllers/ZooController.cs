@@ -3,7 +3,6 @@ using Infra.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -34,12 +33,12 @@ namespace Api.Controllers
 
 
         [HttpPost("Add/")]
-        public ActionResult<Zoo> Add(
+        public async Task<ActionResult<Zoo>> Add(
             [FromBody] Zoo animal)
         {
             try
             {
-                _repo.Add(animal);
+                await _repo.Add(animal);
                 return CreatedAtAction(nameof(GetAnimal), new { id = animal.Id }, animal);
             }
             catch (Exception e)
@@ -58,13 +57,13 @@ namespace Api.Controllers
             {
                 return BadRequest();
             }
-            _repo.Remove(animal);
+            await _repo.Remove(animal);
             return animal;
 
         }
 
-        [HttpPatch("Update/{id}")]
-        public ActionResult<Zoo> Patch(
+        [HttpPut("Update/{id}")]
+        public async Task<ActionResult<Zoo>> Patch(
             int id,
             [FromBody] Zoo animal)
         {
@@ -79,7 +78,7 @@ namespace Api.Controllers
             }
             try
             {
-                _repo.Update(animal);
+                await _repo.Update(animal);
             }
             catch (Exception)
             {
@@ -90,7 +89,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("Read")]
-        public string Read(string path= @"C:\Users\Resource\Downloads\Animal.txt")
+        public string Read(string path = @"C:\Users\Resource\Downloads\Animal.txt")
         {
             return _repo.readFile(path);
         }

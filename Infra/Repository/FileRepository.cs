@@ -1,5 +1,5 @@
-﻿using Infra.Data;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
+using Infra.Data;
 
 namespace Infra.Repository
 {
@@ -11,7 +11,7 @@ namespace Infra.Repository
         {
             this._reader = obj;
         }
-        
+
         public string[] getAll()
         {
             return this._reader.readFile();

@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-
-
-
-namespace Domain.Interfaces
+﻿namespace Domain.Interfaces
 {
     public interface IFileRepository<T> where T : class
     {
-        string [] getAll();
+        string[] getAll();
     }
 }

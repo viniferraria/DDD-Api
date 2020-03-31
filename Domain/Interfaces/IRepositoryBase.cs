@@ -5,11 +5,11 @@ namespace Domain.Interfaces
 {
     public interface IRepositoryBase<TEntity> where TEntity : class
     {
-        void Add(TEntity obj);
+        Task Add(TEntity obj);
         Task<TEntity> GetById(int id);
         IEnumerable<TEntity> GetAll();
-        void Remove(TEntity obj);
-        void Update(TEntity obj);
+        Task Remove(TEntity obj);
+        Task Update(TEntity obj);
         void Dispose();
     }
 }

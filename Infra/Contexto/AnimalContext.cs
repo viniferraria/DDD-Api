@@ -1,22 +1,22 @@
 ﻿using Domain.Models;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace Infra.Data
 {
     public class AnimalContext : DbContext
     {
-       public AnimalContext(): base(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=Projetos;Integrated Security=true")
-       {
-       }
+        public AnimalContext() : base(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=Projetos;Integrated Security=true")
+        {
+        }
 
-//         public AnimalContext(DbContextOptions<AnimalContext> options) : base(options)
-//         {
-//             /*Database.SetInitializer<AnimalContext>(null);*/
-//         }
+        //         public AnimalContext(DbContextOptions<AnimalContext> options) : base(options)
+        //         {
+        //             /*Database.SetInitializer<AnimalContext>(null);*/
+        //         }
 
         public DbSet<Zoo> Zoo { get; set; }
 

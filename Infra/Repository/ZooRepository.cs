@@ -1,14 +1,21 @@
-﻿using Domain.Models;
+﻿using Domain.Interfaces;
+using Domain.Models;
 using Infra.Data.Repository;
-using Domain.Interfaces;
-using Infra.Data;
+using System.Threading.Tasks;
 
 namespace Infra.Repository
 {
     public class ZooRepository : RepositoryBase<Zoo>, IZooRepository
     {
 
-       public string readFile(string filename)
+        public async Task<int> Add(Zoo obj)
+        {
+            await base.Add(obj);
+            return obj.Id;
+            
+        }
+
+        public string readFile(string filename)
         {
             Db.fromFile(filename);
             return "File Read";

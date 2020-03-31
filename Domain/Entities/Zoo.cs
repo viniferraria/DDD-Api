@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
@@ -8,7 +6,7 @@ namespace Domain.Models
     public class Zoo
     {
         public int Id { get; set; }
-        public string Name{ get; set; }
+        public string Name { get; set; }
         public string Specie { get; set; }
 
         public Zoo(int id, string name, string specie)

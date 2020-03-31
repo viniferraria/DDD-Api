@@ -11,7 +11,7 @@ namespace Infra.Data.Repository
     {
         protected AnimalContext Db = new AnimalContext();
 
-        public async void Add(TEntity obj)
+        public async Task Add(TEntity obj)
         {
             Db.Set<TEntity>().Add(obj);
             await Db.SaveChangesAsync();
@@ -32,13 +32,13 @@ namespace Infra.Data.Repository
             return await Db.Set<TEntity>().FindAsync(id);
         }
 
-        public async void Remove(TEntity obj)
+        public async Task Remove(TEntity obj)
         {
             Db.Set<TEntity>().Remove(obj);
             await Db.SaveChangesAsync();
         }
 
-        public async void Update(TEntity obj)
+        public async Task Update(TEntity obj)
         {
             Db.Entry(obj).State = EntityState.Modified;
             await Db.SaveChangesAsync();
