@@ -1,28 +1,20 @@
-﻿using Api;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
+﻿using Domain.Models;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
-using Domain.Models;
-using Xunit;
+using System.Net.Http.Headers;
 using System.Text;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Reader.Tests
 {
-    public class ZooControllerTest
+    public class ZooControllerTest : IClassFixture<ServerFixture>
     {
-        private readonly HttpClient _client;
-        private Zoo ZooTest;
+        private readonly ServerFixture _fixture;
 
-        public ZooControllerTest()
+        public ZooControllerTest(ServerFixture fixture)
         {
-            var server = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development")
-                .UseStartup<Startup>());
-
-            _client = server.CreateClient();
+            this._fixture = fixture;
         }
 
         [Theory]
@@ -31,9 +23,9 @@ namespace Reader.Tests
         {
             // arrange
             var request = new HttpRequestMessage(new HttpMethod(method), "/zoo");
-            
+
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
 
             //assert
             response.EnsureSuccessStatusCode();
@@ -45,14 +37,13 @@ namespace Reader.Tests
         public async Task ZooCreateNewTestAsync(string method)
         {
             // arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/add");
+            var request = new HttpRequestMessage(new HttpMethod(method), "/zoo/add");
             using (var stringContent = new StringContent("{\"name\": \"ZooTest\", \"specie\": \"SpecieTest\"}", Encoding.UTF8, "application/json"))
-                request.Content = stringContent;
+            request.Content = stringContent;
 
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
-            this.ZooTest = JsonConvert.DeserializeObject<Zoo>(responseBody);
 
             //assert
             response.EnsureSuccessStatusCode();
@@ -65,8 +56,9 @@ namespace Reader.Tests
         {
             // arrange
             var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/{id}");
+
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
 
             //assert
             response.EnsureSuccessStatusCode();
@@ -74,17 +66,16 @@ namespace Reader.Tests
         }
 
         [Theory]
-        [InlineData("Put")]
-        public async Task ZooUpdateByIdTestAsync(string method)
+        [InlineData("Put", "2168")]
+        public async Task ZooUpdateByIdTestAsync(string method, string id)
         {
             // arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/update/{this.ZooTest.Id}");
-            this.ZooTest.Name = "Simba";
-            using (var stringContent = new StringContent(JsonConvert.SerializeObject(this.ZooTest), Encoding.UTF8, "application/json"))
-            request.Content = stringContent;
-            
+            var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/update/{id}");
+            using (var stringContent = new StringContent("{\"id\": " + id + ", \"name\": \"ZooTest\", \"specie\": \"SpecieTest\"}", Encoding.UTF8, "application/json"))
+                request.Content = stringContent;
+
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
 
             //assert
             response.EnsureSuccessStatusCode();
@@ -92,19 +83,19 @@ namespace Reader.Tests
         }
 
         [Theory]
-        [InlineData("Delete")]
-        public async Task ZooDeleteByIdTestAsync(string method)
+        [InlineData("Delete", 2169)]
+        public async Task ZooDeleteByIdTestAsync(string method, int id)
         {
             // arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/{this.ZooTest.Id}");
+            var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/{id}");
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
 
             //assert
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [Theory]
         [InlineData("Get")]
         public async Task ZooBulkInsert(string method)
@@ -112,7 +103,7 @@ namespace Reader.Tests
             // arrange
             var request = new HttpRequestMessage(new HttpMethod(method), $"/zoo/read");
             //act
-            var response = await _client.SendAsync(request);
+            var response = await _fixture.client.SendAsync(request);
 
             //assert
             response.EnsureSuccessStatusCode();
