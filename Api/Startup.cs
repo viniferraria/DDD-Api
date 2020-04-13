@@ -24,8 +24,8 @@ namespace Api
                 options.AddPolicy(MyAllowSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
-                        .AllowCredentials()
+                    builder.WithOrigins("*")
+                        .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 });

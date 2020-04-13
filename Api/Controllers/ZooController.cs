@@ -1,8 +1,10 @@
 ﻿using Domain.Models;
 using Infra.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -88,10 +90,28 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("Read")]
-        public string Read(string path = @"C:\Users\Resource\Downloads\Animal.txt")
+        [Consumes("multipart/form-data")]
+        [HttpPost("Read")]
+        public async Task<ActionResult<string>> Read([FromForm] IFormFile file)
+        /*    string path = @"C:\Users\Resource\Downloads\Animal.txt" */
         {
-            return _repo.readFile(path);
+            var filePath = Path.Combine(@"C:\Users\Resource\Downloads", $"{DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss")}.txt");
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
+            try
+            {
+                string message = _repo.readFile(filePath);
+                System.IO.File.Delete(filePath);
+                return message;
+
+            } catch (Exception e)
+            {
+                return BadRequest();
+            }
+
         }
     }
 }
