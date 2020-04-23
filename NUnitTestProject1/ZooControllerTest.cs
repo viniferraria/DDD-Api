@@ -1,7 +1,5 @@
-﻿using Domain.Models;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -39,7 +37,7 @@ namespace Reader.Tests
             // arrange
             var request = new HttpRequestMessage(new HttpMethod(method), "/zoo/add");
             using (var stringContent = new StringContent("{\"name\": \"ZooTest\", \"specie\": \"SpecieTest\"}", Encoding.UTF8, "application/json"))
-            request.Content = stringContent;
+                request.Content = stringContent;
 
             //act
             var response = await _fixture.client.SendAsync(request);
