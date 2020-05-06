@@ -9,7 +9,7 @@ namespace Infra.Data
 {
     public class AnimalContext : DbContext
     {
-        public AnimalContext() : base(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=Projetos;Integrated Security=true")
+        public AnimalContext() : base(@"Data Source=animalproject.database.windows.net,1433;Initial Catalog=Projetos;Persist Security Info=False;User ID=viniferraria;Password=V@197320;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;")
         {
         }
 
