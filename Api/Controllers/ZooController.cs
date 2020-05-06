@@ -105,7 +105,7 @@ namespace Api.Controllers
             {
                 string message = _repo.readFile(filePath);
                 System.IO.File.Delete(filePath);
-                return message;
+                return Ok(new { success = message });
 
             } catch (Exception e)
             {
