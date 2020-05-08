@@ -24,7 +24,7 @@ namespace Api
                 options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
                     builder.AllowAnyOrigin()
-                        .AllowAnyHeader(),
+                        .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
             });
