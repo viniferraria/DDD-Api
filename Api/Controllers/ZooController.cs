@@ -19,18 +19,33 @@ namespace Api.Controllers
         [HttpGet("")]
         public IEnumerable<Zoo> Get()
         {
-            return _repo.GetAll();
+            try 
+            {
+                return _repo.GetAll();
+            } catch (Exception e) 
+            {
+                Console.WriteLine(e);
+                return new List<Zoo>();
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Zoo>> GetAnimal(int id)
         {
-            var animal = await _repo.GetById(id);
-            if (animal != null)
+            try
             {
-                return animal;
+                var animal = await _repo.GetById(id);
+                if (animal != null)
+                {
+                    return animal;
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return new BadRequestResult();
+            }
         }
 
 
@@ -54,14 +69,21 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Zoo>> Delete(int id)
         {
-            Zoo animal = await _repo.GetById(id);
-            if (animal == null)
+            try
             {
+                Zoo animal = await _repo.GetById(id);
+                if (animal == null)
+                {
+                    return BadRequest();
+                }
+                await _repo.Remove(animal);
+                return animal;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
                 return BadRequest();
             }
-            await _repo.Remove(animal);
-            return animal;
-
         }
 
         [HttpPut("Update/{id}")]
@@ -82,39 +104,43 @@ namespace Api.Controllers
             {
                 await _repo.Update(animal);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return NotFound();
-
             }
             return NoContent();
         }
 
-        [Consumes("multipart/form-data")]
         [HttpPost("Read")]
         public async Task<ActionResult<string>> Read([FromForm] IFormFile file)
         /*    string path = @"C:\Users\Resource\Downloads\Animal.txt" */
         {
+            Console.WriteLine("Inside /read");
             var dirName = "temp";
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), dirName);
             if(!Directory.Exists(fullPath))
             {
                 Directory.CreateDirectory(fullPath);
             }
-            var filePath = Path.Combine(fullPath, $"{DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss")}.txt");
-
-            using (var stream = System.IO.File.Create(filePath))
+            if(file == null)
             {
-                await file.CopyToAsync(stream);
+                return BadRequest();
             }
             try
             {
+                var filePath = Path.Combine(fullPath, $"{DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss")}.txt");
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await file.CopyToAsync(stream);
+                }
                 string message = _repo.readFile(filePath);
                 System.IO.File.Delete(filePath);
                 return Ok(new { success = message });
 
             } catch (Exception e)
             {
+                Console.WriteLine(e);
                 return BadRequest();
             }
 
