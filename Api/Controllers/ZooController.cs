@@ -95,7 +95,13 @@ namespace Api.Controllers
         public async Task<ActionResult<string>> Read([FromForm] IFormFile file)
         /*    string path = @"C:\Users\Resource\Downloads\Animal.txt" */
         {
-            var filePath = Path.Combine(@"C:\Users\Resource\Downloads", $"{DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss")}.txt");
+            var dirName = "temp";
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), dirName);
+            if(!Directory.Exists(fullPath))
+            {
+                Directory.CreateDirectory(fullPath);
+            }
+            var filePath = Path.Combine(fullPath, $"{DateTime.Now.ToString("dd_MM_yyyy_hh_mm_ss")}.txt");
 
             using (var stream = System.IO.File.Create(filePath))
             {
