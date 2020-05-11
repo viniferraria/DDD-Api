@@ -8,7 +8,7 @@ namespace Infra.Repository
     public class ZooRepository : RepositoryBase<Zoo>, IZooRepository
     {
 
-        public async Task<int> Add(Zoo obj)
+        public new async Task<int> Add(Zoo obj)
         {
             await base.Add(obj);
             return obj.Id;

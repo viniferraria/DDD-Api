@@ -9,9 +9,9 @@ namespace Domain.Models
         public string Name { get; set; }
         public string Specie { get; set; }
 
-        public Zoo(int id, string name, string specie)
+        public Zoo(string name, string specie)
         {
-            this.Id = id;
+            // this.Id = id;
             this.Name = name;
             this.Specie = specie;
         }
