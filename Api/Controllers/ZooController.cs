@@ -116,7 +116,6 @@ namespace Api.Controllers
         public async Task<ActionResult<string>> Read([FromForm] IFormFile file)
         /*    string path = @"C:\Users\Resource\Downloads\Animal.txt" */
         {
-            Console.WriteLine("Inside /read");
             var dirName = "temp";
             var fullPath = Path.Combine(Directory.GetCurrentDirectory(), dirName);
             if(!Directory.Exists(fullPath))
@@ -134,9 +133,17 @@ namespace Api.Controllers
                 {
                     await file.CopyToAsync(stream);
                 }
-                string message = _repo.readFile(filePath);
-                System.IO.File.Delete(filePath);
-                return Ok(new { success = message });
+
+                string[] readFile = System.IO.File.ReadAllLines(filePath);
+                for(int i = 0; i < readFile.Length; ++i)
+                {
+                    string[] formatedLine = readFile[i].Split(" ");
+                    if (formatedLine.Length < 2) continue;
+                    await _repo.Add(new Zoo(formatedLine[0], formatedLine[1]));
+                }
+                // _repo.readFile(filePath);
+                // System.IO.File.Delete(filePath);
+                return Ok(new { success = "File Read" });
 
             } catch (Exception e)
             {
