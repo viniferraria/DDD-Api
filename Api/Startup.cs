@@ -21,13 +21,11 @@ namespace Api
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
+                options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
-                    builder.WithOrigins("*")
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
             services.AddControllers();

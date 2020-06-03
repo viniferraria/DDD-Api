@@ -5,7 +5,8 @@ namespace Domain.Interfaces
 {
     public interface IZooRepository : IRepositoryBase<Zoo>
     {
-        Task<int> Add(Zoo obj);
+        new Task<int> Add(Zoo obj);
+
         string readFile(string filename);
     }
 }
